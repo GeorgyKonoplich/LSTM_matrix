@@ -57,8 +57,9 @@ def createDataset(features_data, targets_data, label2Idx, case2Idx):
             else:
                 caseIndices.append(getCasing(wordforma, case2Idx))
         labelIndices.append(label2Idx[targets_data.iloc[i]['mark']])
-        dataset.append([wordIndices, caseIndices, labelIndices])
         #break
+        #dataset.append([wordIndices, caseIndices, labelIndices])
+        dataset.append([wordIndices, labelIndices])
     wordEmbeddings = np.array(wordEmbeddings)
 
 
