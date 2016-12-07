@@ -1,0 +1,14 @@
+!classes/.gitignore
+*.pyc
+*.swp
+*.swo
+*.o
+*.so
+.DS_Store
+.settings/**
+/notebooks/.ipynb_checkpoints
+/models/*
+.idea/
+.nfs*
+/data/*
+/datasets/raw/devset/*
