@@ -9,8 +9,8 @@ import math
 
 folder = '../data/processed/'
 files = ['Dialog_test/NER_testset', 'Dialog_train/NER_devset', 'Wiki_set/WikiNER_part1']
-feature_file = '.features.csv'
-target_file = '.targets.csv'
+feature_file = '_short.features.csv'
+target_file = '_short.targets.csv'
 
 words = ['', '2dom_', '1dom_', '-5_' , '-5_2dom_', '-5_1dom_', '-4_', '-4_2dom_', '-4_1dom_', '-3_',
          '-3_2dom_', '-3_1dom_', '-2_', '-2_2dom_', '-2_1dom_', '-1_', '-1_2dom_', '-1_1dom_', '+5_', '+5_2dom_', '+5_1dom_',
@@ -21,8 +21,8 @@ features = ['prefix4', 'prefix3', 'prefix2', 'prefix1', 'postfix4', 'postfix3', 
 
 str_features = ['forma', 'lemma', 'prefix3', 'prefix2', 'prefix1', 'pos', 'prefix4', 'postfix4', 'postfix1', 'postfix3', 'postfix2', 'link', 'grm']
 
-outputFilePath = folder + 'pkl/data.pkl.gz'
-embeddingsPklPath = folder + 'pkl/embeddings.pkl.gz'
+outputFilePath = folder + 'pkl_short/data.pkl.gz'
+embeddingsPklPath = folder + 'pkl_short/embeddings.pkl.gz'
 
 
 def createDataset(label2Idx):
@@ -33,7 +33,7 @@ def createDataset(label2Idx):
     fl = gzip.open(outputFilePath, 'wb')
     for f in files:
         feature_data = pd.read_csv(folder + f + feature_file, sep=';')
-        target_data = pd.read_csv(folder + f + target_file)
+        target_data = pd.read_csv(folder + f + target_file, sep=';')
         wordIndices = []
         labelIndices = []
         dataset = []
@@ -91,7 +91,7 @@ def get_labels():
     labelSet = set()
 
     for f in files:
-        target_data = pd.read_csv(folder + f + target_file)
+        target_data = pd.read_csv(folder + f + target_file, sep=';')
         for i in range(0, len(target_data)):
             labelSet.add(target_data.iloc[i]['mark'])
 
