@@ -34,10 +34,10 @@ def createDataset(label2Idx):
     for f in files:
         feature_data = pd.read_csv(folder + f + feature_file, sep=';')
         target_data = pd.read_csv(folder + f + target_file)
-        wordIndices = []
-        labelIndices = []
         dataset = []
         for i in range(0, len(feature_data)):
+            wordIndices = []
+            labelIndices = []
             row = feature_data.iloc[i]
             for word in words:
                 #print(word+'forma')
