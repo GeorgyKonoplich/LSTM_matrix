@@ -29,20 +29,18 @@ def createDataset(label2Idx):
     code_table = {}
     for ft in str_features:
         code_table[ft] = {}
-    wordEmbeddings = []
     fl = gzip.open(outputFilePath, 'wb')
     for f in files:
         feature_data = pd.read_csv(folder + f + feature_file, sep=';')
-        target_data = pd.read_csv(folder + f + target_file)
+        target_data = pd.read_csv(folder + f + target_file, sep=';')
+        feature_data = feature_data.fillna(0)
         dataset = []
         for i in range(0, len(feature_data)):
-            wordIndices = []
-            labelIndices = []
             row = feature_data.iloc[i]
+            labelIndices = []
+            wordEmbeddings = []
             for word in words:
-                #print(word+'forma')
                 wordforma = row[word+'forma']
-                #print(wordforma)
                 v = []
                 for ft in features:
                     x = row[word+ft]
@@ -52,26 +50,18 @@ def createDataset(label2Idx):
                         else:
                             code_table[ft][row[word + ft]] = len(code_table[ft])
                             x = code_table[ft][row[word + ft]]
-                    #print(type(row[word+ft]))
-                    #if math.isnan(row[word+ft]):
-                    #    v.append(0)
-                    #else:
-                    v.append(x)
+                    v.append(int(x))
 
-                wordEmbeddings.append(v)
-                wordIndices.append(len(wordEmbeddings) - 1)
+                wordEmbeddings.append(np.array(v))
 
             labelIndices.append(label2Idx[target_data.iloc[i]['mark']])
-            dataset.append([wordIndices, labelIndices])
+            dataset.append([np.array(wordEmbeddings), np.array(labelIndices)])
         
         print('create_data')
-        pkl.dump(dataset, fl, -1)
+        pkl.dump(np.array(dataset), fl, -1)
 
-        #break
-
-    wordEmbeddings = np.array(wordEmbeddings)
     fl.close()
-    return wordEmbeddings, code_table
+    return code_table
 
 def get_string_column():
     featureSet = set()
@@ -91,7 +81,7 @@ def get_labels():
     labelSet = set()
 
     for f in files:
-        target_data = pd.read_csv(folder + f + target_file)
+        target_data = pd.read_csv(folder + f + target_file, sep=';')
         for i in range(0, len(target_data)):
             labelSet.add(target_data.iloc[i]['mark'])
 
@@ -110,9 +100,9 @@ for label in labelSet:
 
 
 
-wordEmbeddings, code_table = createDataset(label2Idx)
+code_table = createDataset(label2Idx)
 
-embeddings = {'wordEmbeddings': wordEmbeddings, 'label2Idx': label2Idx}
+embeddings = {'label2Idx': label2Idx}
 
 f = gzip.open(embeddingsPklPath, 'wb')
 pkl.dump(embeddings, f, -1)
